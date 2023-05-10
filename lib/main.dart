@@ -1,21 +1,38 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keiri/screen/employee/shift_request.dart';
-import 'package:keiri/screen/store/money_manage.dart';
+import 'package:keiri/screen/employee/shift_view.dart';
+import 'package:keiri/view_moedl/auth_view_model.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-import 'screen/manage/money_manage_decision.dart';
+import 'screen/auth/login_view.dart';
+
+StateProvider<int> drawerIndexProvider = StateProvider((ref) => 0);
 
 void main() async {
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    ref.read(authViewModelProvider.notifier).readProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return ScreenUtilInit(
         designSize: const Size(360, 640),
         minTextAdapt: true,
@@ -36,7 +53,9 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
-            home: MoneyManageDecision(),
+            home: ref.watch(authViewModelProvider) == null
+                ? LoginView()
+                : ShiftView(),
           );
         });
   }

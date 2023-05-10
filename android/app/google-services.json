@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "549038656022",
+    "project_id": "keiri-a9473",
+    "storage_bucket": "keiri-a9473.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549038656022:android:41e820dd69a15817fbc337",
+        "android_client_info": {
+          "package_name": "com.keiri.shift"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "549038656022-tt0ira51oscm93k2n19qc8u87199atrj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5ON0WmDmLSdxaYqSeUu0Cr_lmyrFCbm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "549038656022-tt0ira51oscm93k2n19qc8u87199atrj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

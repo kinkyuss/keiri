@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:keiri/view_moedl/shit_view_model.dart';
+import 'package:keiri/widgets/drawer.dart';
 
-class ShiftRequest extends StatefulWidget {
+class ShiftRequest extends ConsumerStatefulWidget {
   const ShiftRequest({super.key});
 
   @override
   ShiftRequestState createState() => ShiftRequestState();
 }
 
-class ShiftRequestState extends State<ShiftRequest> {
+class ShiftRequestState extends ConsumerState<ShiftRequest> {
   late Future<DateTime?> selectedDate;
   DateTime? date;
 
@@ -19,49 +22,73 @@ class ShiftRequestState extends State<ShiftRequest> {
   DateTime? endTime;
 
   List<Map<String, DateTime>> sce = [];
+  bool onTap = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CustomDrawer(),
       // backgroundColor: Colors.white,
       appBar: AppBar(title: Text('シフト申請')),
-      body: Column(
-        children: <Widget>[
-          const Spacer(flex: 10),
-          SizedBox(
-            height: 300.h,
-            child: ListView.builder(
-              itemCount: sce.length,
-              itemBuilder: (BuildContext context, int index) {
-                DateTime startTimeDate = sce[index]['startTime']!;
-                DateTime endTimeDate = sce[index]['endTime']!;
+      body: onTap
+          ? Container(
+              alignment: Alignment.center,
+              child: const CircularProgressIndicator(
+                color: Colors.green,
+              ))
+          : Column(
+              children: <Widget>[
+                const Spacer(flex: 10),
+                SizedBox(
+                  height: 300.h,
+                  child: ListView.builder(
+                    itemCount: sce.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      DateTime startTimeDate = sce[index]['startTime']!;
+                      DateTime endTimeDate = sce[index]['endTime']!;
 
-                return Container(
+                      return Container(
+                        alignment: Alignment.center,
+                        width: double.infinity,
+                        height: 45.h,
+                        color: Colors.grey[300],
+                        child: Text(
+                            "${startTimeDate.year}年${startTimeDate.month}月${startTimeDate.day}日 ${startTimeDate.hour}時${startTimeDate.minute}分 ～ ${endTimeDate.hour}時${endTimeDate.minute}分"),
+                      );
+                    },
+                  ),
+                ),
+                Align(
                   alignment: Alignment.center,
-                  width: double.infinity,
-                  height: 45.h,
-                  color: Colors.grey[300],
-                  child: Text(
-                      "${startTimeDate.year}年${startTimeDate.month}月${startTimeDate.day}日 ${startTimeDate.hour}時${startTimeDate.minute}分 ～ ${endTimeDate.hour}時${endTimeDate.minute}分"),
-                );
-              },
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        elevation: 0,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        padding: const EdgeInsets.symmetric(horizontal: 30)),
+                    child:
+                        const Text("申請", style: TextStyle(color: Colors.white)),
+                    onPressed: () async {
+                      if (!onTap) {
+                        setState(() {
+                          onTap=true;
+                        });
+                        await ref
+                            .read(shiftProvider.notifier)
+                            .shiftRequest(sce);
+                        setState(() {
+                          sce = [];
+                          onTap=false;
+                        });
+                      } else {
+                        null;
+                      }
+                    },
+                  ),
+                ),
+              ],
             ),
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  padding: const EdgeInsets.symmetric(horizontal: 30)),
-              child: const Text("申請", style: TextStyle(color: Colors.white)),
-              onPressed: () {},
-            ),
-          ),
-        ],
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.grey,
         onPressed: () {
@@ -125,7 +152,7 @@ class ShiftRequestState extends State<ShiftRequest> {
         if (Localizations.localeOf(context).languageCode == 'es') {
           return Localizations.override(
             context: context,
-            locale: Locale('es', 'US'),
+            locale: Locale('jp', 'JP'),
             child: mediaQueryWrapper,
           );
         }
