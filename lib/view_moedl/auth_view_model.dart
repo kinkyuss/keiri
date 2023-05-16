@@ -23,6 +23,10 @@ class AuthViewModel extends StateNotifier<User?> {
     }
   }
 
+  Future<void>upDateHourlyWage(String uid,int hourlyWage)async{
+    await authRepository.upDateHourlyWage(uid,hourlyWage);
+  }
+
   Future<bool> passwordCheck(String uid,String password,) async {
 
     return await authRepository.passwordCheck(uid,password);

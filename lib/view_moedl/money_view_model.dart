@@ -5,13 +5,13 @@ import '../repository/money_repository.dart';
 
 
 final moneyProvider =
-StateNotifierProvider<moneyViewModel, Object?>((ref) {
+StateNotifierProvider<moneyViewModel, List>((ref) {
   return moneyViewModel(
     ref.read,
   );
 });
 
-class moneyViewModel extends StateNotifier<Object?> {
+class moneyViewModel extends StateNotifier<List> {
   final _read;
 
   moneyViewModel(this._read) : super([]);
@@ -51,8 +51,37 @@ class moneyViewModel extends StateNotifier<Object?> {
   }
 
   Future<void> getDay(DateTime now) async {
-    state= await _read(moneyRepositoryProvider)
+    state = await _read(moneyRepositoryProvider)
         .getDay(now.microsecondsSinceEpoch);
   }
-}
 
+  Future<void> getMonth(DateTime month) async {
+    List<Map<String, dynamic>> maps = await _read(moneyRepositoryProvider).getMonth(month);
+    List<Map<String, dynamic>>combine = combineByOptionTitle(maps);
+    state = combine;
+  }
+
+  List<Map<String, dynamic>> combineByOptionTitle(List<Map<String, dynamic>> options) {
+    Map<String, int> optionMap = {};
+
+    for (var option in options) {
+      final title = option['optionTitle'];
+      final int value = option['optionValue'];
+      if (optionMap.containsKey(title)) {
+        optionMap[title] = optionMap[title]! + value;
+      } else {
+        optionMap[title] = value.toInt();
+      }
+    }
+
+    return optionMap.entries
+        .map((entry) =>
+    {'optionTitle': entry.key, 'optionValue': entry.value})
+        .toList();
+  }
+  Future<void> update(List dataList,DateTime change) async {
+  await _read(moneyRepositoryProvider).update(dataList,change);
+  print(dataList);
+  state=dataList;
+  }
+}

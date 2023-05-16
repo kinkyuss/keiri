@@ -18,19 +18,22 @@ class appointmentViewModel extends StateNotifier<List<Appointment>> {
     await _read(shiftRepositoryProvider).addShift(shifts);
   }
 
-  Future<void> shiftManage(int year,int month) async {
-    state= await _read(shiftRepositoryProvider).shiftManage(year,month);
+  Future<void> shiftManage(int year, int month) async {
+    state = await _read(shiftRepositoryProvider).shiftManage(year, month);
   }
-  Future<void> shiftView(int year,int month,int day) async {
-    state= await _read(shiftRepositoryProvider).shiftView(year,month,day);
-  }
-  Future<void>statusChange(String id,int status)async{
-  await _read(shiftRepositoryProvider).statusChange(id,status);
 
-  state = [
-    for (final apo in state)
-      if (apo.notes != id) apo,
-  ];
-
+  Future<void> shiftView(int year, int month, int day) async {
+    state = await _read(shiftRepositoryProvider).shiftView(year, month, day);
   }
+
+  Future<void> statusChange(String id, int status) async {
+    await _read(shiftRepositoryProvider).statusChange(id, status);
+
+    state = [
+      for (final apo in state)
+        if (apo.notes != id) apo,
+    ];
+  }
+
+
 }

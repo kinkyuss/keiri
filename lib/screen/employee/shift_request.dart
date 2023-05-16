@@ -72,14 +72,14 @@ class ShiftRequestState extends ConsumerState<ShiftRequest> {
                     onPressed: () async {
                       if (!onTap) {
                         setState(() {
-                          onTap=true;
+                          onTap = true;
                         });
                         await ref
                             .read(shiftProvider.notifier)
                             .shiftRequest(sce);
                         setState(() {
                           sce = [];
-                          onTap=false;
+                          onTap = false;
                         });
                       } else {
                         null;

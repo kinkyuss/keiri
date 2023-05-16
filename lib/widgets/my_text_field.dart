@@ -34,6 +34,7 @@ class MyTextField extends StatelessWidget {
         fontSize: 25.sp,
       ),
       decoration: InputDecoration(
+
         contentPadding: EdgeInsets.all(10.0.r),
         hintText: hintText,
         enabledBorder: OutlineInputBorder(

@@ -23,7 +23,7 @@ class _MoneyManageState extends ConsumerState<MoneyManage> {
   int? yorozuya;
   List<Map<String, dynamic>> options = [];
   bool onTap = false;
-
+  late Future<DateTime?> selectedDate;
   @override
   Widget build(BuildContext context) {
 
@@ -84,6 +84,8 @@ class _MoneyManageState extends ConsumerState<MoneyManage> {
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
                         ],
+                        controller: TextEditingController(
+                            text: decide(-2, false)),
                         decoration: InputDecoration(
                             border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -104,30 +106,27 @@ class _MoneyManageState extends ConsumerState<MoneyManage> {
                     SizedBox(
                       width: 200.w,
                       child: TextField(
+                        controller: TextEditingController(
+                            text: decide(-1, false)),
                         onChanged: (String optionValue) {
                           int? searchIndex;
                           try {
                             searchIndex = options.indexWhere((e) {
+                              print(e);
                               return e['n'] == -1;
                             });
                           } catch (e) {
                             searchIndex = -1;
                           }
 
-                          if (options[searchIndex]['optionTitle']==null){
-
-                          }
-                          else if (searchIndex != -1) {
+                          if (searchIndex != -1) {
                             Map<String, dynamic> get = options[searchIndex];
-                            get['optionValue'] =
-                                optionValue == '' ? 0 : int.parse(optionValue);
+                            get['optionValue'] = int.parse(optionValue);
                             options[searchIndex] = get;
                           } else {
                             options.add({
                               'n': -1,
-                              'optionValue': optionValue == ''
-                                  ? 0
-                                  : int.parse(optionValue),
+                              'optionValue': int.parse(optionValue),
                               'optionTitle': 'レジ',
                             });
                           }

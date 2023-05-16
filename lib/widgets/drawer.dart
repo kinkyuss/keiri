@@ -11,6 +11,7 @@ import 'package:keiri/screen/manage/staff_kintai.dart';
 import 'package:keiri/screen/store/in_out_rest.dart';
 import 'package:keiri/screen/store/money_manage.dart';
 import 'package:keiri/view_moedl/auth_view_model.dart';
+import 'package:keiri/view_moedl/kintai_view_model.dart';
 import 'package:keiri/view_moedl/money_view_model.dart';
 import 'package:keiri/view_moedl/shit_view_model.dart';
 
@@ -136,10 +137,12 @@ class CustomDrawer extends ConsumerWidget {
               DateTime now = DateTime.now();
               DateTime zeroed = DateTime(now.year, now.month, now.day);
               ref.read(moneyProvider.notifier).getDay(zeroed);
-              seni = const MoneyManageDecision();
+              seni =  MoneyManageDecision(now: zeroed);
               break;
             case 'スタッフ出勤状況':
-              seni=const StaffKintai();
+              ref.read(kintaiProvider.notifier).state=[];
+              seni=StaffKintai();
+
           }
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => seni));

@@ -25,6 +25,10 @@ class AuthRepository {
     final User? currentUser = firebaseAuth.currentUser;
     return currentUser;
   }
+  Future<void>upDateHourlyWage(String uid,int hourlyWage)async{
+    final profileRef = FirebaseFirestore.instance.collection('Users').doc(uid);
+    profileRef.update({'時給': hourlyWage});
+  }
 
   Future<User?> updateEmailAndSendVerificationEmail(String newEmail) async {
     final currentUser = firebaseAuth.currentUser;
@@ -73,6 +77,12 @@ class AuthRepository {
     profileRef.update({'image': uid});
     final credentialRe = firebaseAuth.currentUser;
     return credentialRe;
+  }
+
+  Future getHourlyWage(String uid) async {
+    final querySnapshot =
+        await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+    return querySnapshot.data()!['時給'] as int;
   }
 
   Future<String> nameSearch(String name) async {

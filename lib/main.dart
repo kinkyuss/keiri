@@ -13,6 +13,11 @@ import 'screen/auth/login_view.dart';
 StateProvider<int> drawerIndexProvider = StateProvider((ref) => 0);
 
 void main() async {
+  Duration duration=Duration(hours:1,minutes: 22);
+  int hours = duration.inHours;
+  print(duration.inMinutes);
+  int minutes = (duration.inMinutes % 60);
+  print('$hours時間 $minutes分');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
