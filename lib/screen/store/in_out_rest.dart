@@ -114,10 +114,14 @@ class _InOutRestState extends ConsumerState<InOutRest> {
                                   });
 
                                   if (check) {
-                                    passwordSuccess = true;
                                     await ref
                                         .read(kintaiProvider.notifier)
-                                        .get(uid);
+                                        .get(uid,now);
+                                    setState(() {
+                                      passwordSuccess = true;
+                                    });
+
+
                                   } else {
                                     AlertMessageDialog.show(
                                         context,
@@ -260,6 +264,9 @@ class _InOutRestState extends ConsumerState<InOutRest> {
               } else {
                 if (kind == '休憩開始' || kind == '休憩終了') {
                   rest = !rest;
+                }
+                if( !ref.read(kintaiProvider.notifier).check()&&kind=='退勤'){
+                  await ref.read(kintaiProvider.notifier).add(uid, '休憩終了');
                 }
                 await ref.read(kintaiProvider.notifier).add(uid, kind);
               }

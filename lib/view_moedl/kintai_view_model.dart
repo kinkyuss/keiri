@@ -13,6 +13,47 @@ class KintaiViewModel extends StateNotifier<List<Map>> {
 
   KintaiViewModel(this._read) : super([]);
 
+  void update(List<Map> re) {
+    print(re);
+
+    state = [...re];
+  }
+
+  Future<void> updateFire(String uid, DateTime select) async {
+    await _read(kintaiRepositoryProvider).updateFire(uid, select, state);
+  }
+
+  Future<void> addState(String kind, DateTime? time,int ? makanai) async {
+    bool error = false;
+    if (kind=='まかない') {
+      state = [
+        ...state,
+        {'kind': kind, 'val': makanai}
+      ];
+    }
+    else{
+      state = [
+        ...state,
+        {'kind': kind, 'val': time}
+      ];
+    }
+  }
+
+  bool check(){
+    List store=List.of(state);
+    int a=0;
+    int b=0;
+    for (final attendance in store) {
+      if (attendance['kind'] == '休憩開始') {
+        a += 1;
+      } else if (attendance['kind'] == '休憩終了') {
+        b += 1;
+      }
+    }
+   return a==b;
+
+  }
+
   Future<void> add(String uid, String kind) async {
     DateTime now = DateTime.now();
     print('fadsfas');
@@ -45,8 +86,14 @@ class KintaiViewModel extends StateNotifier<List<Map>> {
     }
   }
 
-  Future<void> get(String uid) async {
-    state = await _read(kintaiRepositoryProvider).get(uid);
+  Future<void> get(String uid, DateTime? day) async {
+    state = await _read(kintaiRepositoryProvider).get(uid, day);
+  }
+
+  Future<void> delete(int index) async {
+    List store=List.of(state);
+    store.removeAt(index);
+    state =[...store];
   }
 
   Future timeCalculator(String uid, List<List<Map<String, dynamic>>> lists,
@@ -58,7 +105,6 @@ class KintaiViewModel extends StateNotifier<List<Map>> {
     int times = 0;
     List<String> waste = [];
     for (List<Map<String, dynamic>> list in lists) {
-
       DateTime? start;
       DateTime? end;
       DateTime? startBreak;
@@ -105,8 +151,8 @@ class KintaiViewModel extends StateNotifier<List<Map>> {
     print(zissitsu.inMinutes);
     int mi = (hourlyWage ~/ 4) + ((hourlyWage % 4 == 0) ? 0 : 1);
     print(mi);
-    print( (zissitsu.inMinutes ~/4));
-    int salary = (zissitsu.inMinutes ~/15)* mi - totalMeal;
+    print((zissitsu.inMinutes ~/ 4));
+    int salary = (zissitsu.inMinutes ~/ 15) * mi - totalMeal;
 
     return {
       'waste': waste,
@@ -114,8 +160,7 @@ class KintaiViewModel extends StateNotifier<List<Map>> {
       'totalBreak': '${totalBreak.inHours}時間 ${totalBreak.inMinutes % 60}分',
       'totalMeal': '$totalMeal円',
       'hourlyWage': '$hourlyWage円',
-      'zissitsu':
-          '${zissitsu.inHours}時間 ${zissitsu.inMinutes % 60}分',
+      'zissitsu': '${zissitsu.inHours}時間 ${zissitsu.inMinutes % 60}分',
       'salary': '$salary円'
     };
   }

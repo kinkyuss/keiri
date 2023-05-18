@@ -12,7 +12,8 @@ class MoneyRepository {
 
   Future<void> add(String uid, String kind, List<Map> already) async {
     DateTime now = DateTime.now();
-    int nowInt = DateTime(now.year, now.month, now.day).microsecondsSinceEpoch+4;
+    int nowInt =
+        DateTime(now.year, now.month, now.day).microsecondsSinceEpoch ;
 
     await _requestsRef.doc(nowInt.toString() + uid).set({
       'data': already,
@@ -21,9 +22,15 @@ class MoneyRepository {
     });
   }
 
-  Future<List<Map>> get(String uid) async {
-    DateTime now = DateTime.now();
-    int id = DateTime(now.year, now.month, now.day).microsecondsSinceEpoch;
+  Future<void> updateFire(String uid, DateTime select, List<Map> state) async {
+    int nowInt =
+        DateTime(select.year, select.month, select.day).microsecondsSinceEpoch ;
+    await _requestsRef.doc(nowInt.toString() + uid).update({'data': state});
+  }
+
+  Future<List<Map>> get(String uid, DateTime? day) async {
+    day ??= DateTime.now();
+    int id = DateTime(day.year, day.month, day.day).microsecondsSinceEpoch;
     var snapshot = await _requestsRef.doc(id.toString() + uid).get();
     if (snapshot.exists) {
       print('fasdfdsa');
@@ -35,18 +42,18 @@ class MoneyRepository {
     }
   }
 
-  Future<Map<String,List>> getMonth(String uid ,DateTime first) async {
+  Future<Map<String, List>> getMonth(String uid, DateTime first) async {
     final DateTime lastDayOfMonth = DateTime(first.year, first.month + 1, 0);
 
     final QuerySnapshot querySnapshot = await _requestsRef
         .where('createDay',
             isGreaterThanOrEqualTo: first, isLessThan: lastDayOfMonth)
-    .where('uid',isEqualTo: uid)
+        .where('uid', isEqualTo: uid)
         .get();
 
     final List<DocumentSnapshot> documents = querySnapshot.docs;
-    List<List<Map<String,dynamic>>> maps = [];
-    List <DateTime > dates=[];
+    List<List<Map<String, dynamic>>> maps = [];
+    List<DateTime> dates = [];
 
     for (DocumentSnapshot document in documents) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
@@ -59,6 +66,6 @@ class MoneyRepository {
     List<List<Map<String, dynamic>>> change =
         List<List<Map<String, dynamic>>>.from(maps);
 
-    return {'データ':change,'日':dates};
+    return {'データ': change, '日': dates};
   }
 }

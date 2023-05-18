@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:keiri/view_moedl/money_view_model.dart';
@@ -56,6 +57,11 @@ class _MoneyManageDecisionState extends ConsumerState<MoneyManageDecision> {
                 child: Text(title == '券売機' || title == 'レジ' ? '' : title))),
             DataCell(choiceIndex == 0
                 ? TextFormField(
+              keyboardType: TextInputType.number,
+
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly
+              ],
                     focusNode: focusNode,
                     controller: TextEditingController()..text = value,
                     textAlign: TextAlign.right,
@@ -132,7 +138,7 @@ class _MoneyManageDecisionState extends ConsumerState<MoneyManageDecision> {
                       if (choiceIndex == 0) {
                         selectedDate = showDatePicker(
                           locale: Locale('ja'),
-                          confirmText: '開始時刻へ',
+                          confirmText: '完了',
                           context: context,
                           helpText: '勤務日',
                           initialDate: date == null ? widget.now : date!,
@@ -216,7 +222,7 @@ class _MoneyManageDecisionState extends ConsumerState<MoneyManageDecision> {
               ],
             ),
             dataList.isEmpty
-                ? Text('この日のデータはありません。')
+                ? choiceIndex==0?Text('この日のデータはありません。'):Text('この月のデータはありません。')
                 : SizedBox(
                     width: double.infinity,
                     child: DataTable(

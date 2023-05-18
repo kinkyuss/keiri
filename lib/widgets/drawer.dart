@@ -14,6 +14,7 @@ import 'package:keiri/view_moedl/auth_view_model.dart';
 import 'package:keiri/view_moedl/kintai_view_model.dart';
 import 'package:keiri/view_moedl/money_view_model.dart';
 import 'package:keiri/view_moedl/shit_view_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CustomDrawer extends ConsumerWidget {
   CustomDrawer({Key? key}) : super(key: key);
@@ -71,7 +72,11 @@ class CustomDrawer extends ConsumerWidget {
               minimumSize: MaterialStateProperty.all(Size.zero),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            onPressed: () {},
+            onPressed: () {
+              final url = Uri.parse('https://note.com/l_s_c/n/n1e3005e5745d');
+              launchUrl(url);
+
+            },
             child: Text('プライバシーポリシー',
                 style: TextStyle(color: Colors.grey, fontSize: 15.sp)),
           ),
