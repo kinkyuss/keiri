@@ -175,7 +175,7 @@ class _MoneyManageDecisionState extends ConsumerState<MoneyManageDecision> {
                           locale: const Locale("ja", "JP"),
                           // 追加
                           context: context,
-                          initialDate: date,
+                          initialDate: date!,
                           firstDate: DateTime(DateTime.now().year - 1),
                           lastDate: DateTime(DateTime.now().year + 1),
                         );

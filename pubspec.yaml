@@ -45,7 +45,7 @@ dependencies:
   firebase_core: ^2.10.0
   cloud_firestore: ^4.5.3
   firebase_auth: ^4.4.2
-  month_picker_dialog: ^0.4.0
+  month_picker_dialog: ^2.0.0
   pdf: ^3.1.0
   path_provider: ^2.0.1
 
